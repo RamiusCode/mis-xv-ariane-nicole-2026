@@ -3,49 +3,8 @@
 ---
 
 <section class="relative w-full xl:px-40 overflow-hidden" id="seccion-final">
-  <!-- CONTENEDOR DE MARIPOSAS FLOTANTES -->
-  <!-- <div class="relative w-full h-32 md:h-40 lg:h-48" id="mariposas-final">
-    <div
-      class="absolute left-[10%] top-[20%] mariposa-flotante"
-      id="mariposa-final-1"
-    >
-      <img
-        src="/gif/esferagif.gif"
-        alt="Mariposa"
-        class="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 object-contain"
-      />
-    </div>
-    <div
-      class="absolute left-[25%] top-[50%] mariposa-flotante"
-      id="mariposa-final-2"
-    >
-      <img
-        src="/gif/esferagif.gif"
-        alt="Mariposa"
-        class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain scale-x-[-1]"
-      />
-    </div>
-    <div
-      class="absolute right-[25%] top-[45%] mariposa-flotante"
-      id="mariposa-final-4"
-    >
-      <img
-        src="/gif/esferagif.gif"
-        alt="Mariposa"
-        class="w-9 h-9 md:w-11 md:h-11 lg:w-13 lg:h-13 object-contain"
-      />
-    </div>
-    <div
-      class="absolute right-[10%] top-[25%] mariposa-flotante"
-      id="mariposa-final-5"
-    >
-      <img
-        src="/gif/esferagif.gif"
-        alt="Mariposa"
-        class="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 object-contain scale-x-[-1]"
-      />
-    </div>
-  </div> -->
+  <!-- ESPACIO RESERVADO (antes tenía las esferas flotantes) -->
+  <div class="relative w-full h-32 md:h-40 lg:h-48" id="mariposas-final"></div>
 
   <!-- CONTENEDOR CON IMAGEN SOBRE FLORES -->
   <div class="relative w-full" id="imagen-flores-container">
@@ -59,7 +18,6 @@
     </div>
 
     <!-- IMAGEN QUINCEAÑERA SOBRE LAS FLORES -->
-    <!-- FIX: inset-0 + flex centrado + imagen con margin auto -->
     <div
       class="absolute inset-0 flex items-center justify-center"
       id="imagen-quinceañera-container"
@@ -86,83 +44,25 @@
     document.addEventListener("DOMContentLoaded", () => {
       gsap.set("#flores-final", { opacity: 0, y: 30 });
       gsap.set("#imagen-quinceañera", { opacity: 0, scale: 0.9, y: 40 });
-      gsap.set(".mariposa-flotante", { opacity: 0, scale: 0.5, y: -20 });
 
       ScrollTrigger.create({
         trigger: "#seccion-final",
         start: "top 80%",
-        end: "top 20%",
         onEnter: () => {
           const tl = gsap.timeline();
-
           tl.to(
             "#flores-final",
             { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
             0,
-          )
-            .to(
-              "#imagen-quinceañera",
-              { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "power3.out" },
-              0,
-            )
-            .to(
-              ".mariposa-flotante",
-              {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                duration: 0.8,
-                ease: "back.out(1.5)",
-                stagger: 0.08,
-              },
-              0,
-            );
-
-          gsap.to("#mariposa-final-1", {
-            y: -15,
-            x: 10,
-            rotation: 5,
-            duration: 3,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 0.8,
-          });
-          gsap.to("#mariposa-final-2", {
-            y: -20,
-            x: -8,
-            rotation: -3,
-            duration: 3.5,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 1,
-          });
-          gsap.to("#mariposa-final-4", {
-            y: -12,
-            x: 12,
-            rotation: -5,
-            duration: 3.2,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 1.2,
-          });
-          gsap.to("#mariposa-final-5", {
-            y: -16,
-            x: -10,
-            rotation: 4,
-            duration: 3.8,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 1.4,
-          });
+          ).to(
+            "#imagen-quinceañera",
+            { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            0,
+          );
         },
         onLeaveBack: () => {
           gsap.set("#flores-final", { opacity: 0, y: 30 });
           gsap.set("#imagen-quinceañera", { opacity: 0, scale: 0.9, y: 40 });
-          gsap.set(".mariposa-flotante", { opacity: 0, scale: 0.5, y: -20 });
         },
       });
     });
@@ -170,16 +70,6 @@
 </script>
 
 <style>
-  .mariposa-flotante {
-    will-change: transform;
-    transition: all 0.3s ease;
-  }
-
-  .mariposa-flotante:hover {
-    transform: scale(1.1) !important;
-    filter: brightness(1.2);
-  }
-
   #imagen-quinceañera img {
     transition: transform 0.5s ease;
   }
