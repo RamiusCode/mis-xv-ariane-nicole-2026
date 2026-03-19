@@ -1,0 +1,193 @@
+---
+// CodigoVestimenta.astro - Quinceañera Edition ✨
+---
+
+<section class="py-4 px-4">
+  <div class="max-w-xl mx-auto text-center">
+    <!-- 🌸 SEPARADOR SUPERIOR -->
+    <!-- <div class="flex justify-center mb-8" id="separador-superior">
+      <img
+        src="/imagenes/Separador.png"
+        alt="Separador decorativo"
+        class="w-32 md:w-48 lg:w-56 h-auto object-contain"
+      />
+    </div> -->
+
+    <!-- TÍTULO CÓDIGO DE VESTIMENTA -->
+    <div class="mb-4" id="titulo-vestimenta">
+      <h2
+        class="font-charm text-2xl md:text-3xl font-bold tracking-wide titulo-vest"
+      >
+        CÓDIGO DE VESTIMENTA
+      </h2>
+    </div>
+
+    <!-- 👔 IMAGEN VESTIMENTA -->
+    <div class="flex justify-center mb-4" id="imagen-vestimenta">
+      <img
+        src="/imagenes/Vestimenta.png"
+        alt="Código de vestimenta"
+        class="w-20 h-auto md:w-72 lg:w-80 object-contain icono-cyan"
+      />
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="mb-3" id="descripcion-vestimenta">
+      <p
+        class="font-charm text-2xl md:text-3xl font-bold leading-relaxed desc-vest"
+      >
+        Semi Formal
+      </p>
+    </div>
+
+    <!-- NOTA IMPORTANTE -->
+    <div class="mb-2" id="nota-vestimenta">
+      <p class="font-charm text-xl md:text-lg leading-relaxed nota-vest">
+        Colores reservados para la quinceañera:
+      </p>
+      <p class="font-charm text-xl md:text-2xl font-bold mt-2 texto-celeste">
+        Celeste
+      </p>
+      <p class="font-charm text-xl md:text-2xl font-bold texto-verde">
+        Verde Agua
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.set("#separador-superior", { opacity: 0, scale: 0.8 });
+      gsap.set("#titulo-vestimenta", { opacity: 0, scale: 0.9 });
+      gsap.set("#imagen-vestimenta", { opacity: 0, scale: 0.8 });
+      gsap.set("#descripcion-vestimenta", { opacity: 0, scale: 0.9 });
+      gsap.set("#nota-vestimenta", { opacity: 0, scale: 0.9 });
+      gsap.set("#chips-colores", { opacity: 0, y: 10 });
+
+      ScrollTrigger.create({
+        trigger: "#separador-superior",
+        start: "top 85%",
+        end: "top 20%",
+        onEnter: () => {
+          const tl = gsap.timeline();
+
+          tl.to(
+            "#separador-superior, #titulo-vestimenta, #imagen-vestimenta, #descripcion-vestimenta, #nota-vestimenta",
+            { opacity: 1, duration: 1, ease: "power2.out" },
+          )
+            .to(
+              "#separador-superior",
+              { scale: 1, duration: 1, ease: "back.out(1.5)" },
+              "<",
+            )
+            .to(
+              "#titulo-vestimenta, #descripcion-vestimenta, #nota-vestimenta",
+              { scale: 1, duration: 1, ease: "back.out(1.2)" },
+              "<",
+            )
+            .to(
+              "#imagen-vestimenta",
+              { scale: 1, duration: 1, ease: "back.out(1.5)" },
+              "<",
+            )
+            .to(
+              "#chips-colores",
+              { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.4)" },
+              "-=0.3",
+            );
+        },
+        onLeaveBack: () => {
+          const tl = gsap.timeline();
+          tl.to(
+            "#separador-superior, #titulo-vestimenta, #imagen-vestimenta, #descripcion-vestimenta, #nota-vestimenta, #chips-colores",
+            { opacity: 0, duration: 0.5, ease: "power2.in" },
+          )
+            .to(
+              "#separador-superior",
+              { scale: 0.8, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#titulo-vestimenta, #descripcion-vestimenta, #nota-vestimenta",
+              { scale: 0.9, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#imagen-vestimenta",
+              { scale: 0.8, duration: 0.5, ease: "power2.in" },
+              "<",
+            );
+        },
+      });
+    });
+  }
+</script>
+
+<style>
+  /* ─── TÍTULO ─── */
+  .titulo-vest {
+    color: #ffffff;
+    text-shadow:
+      0 0 20px rgba(0, 232, 255, 0.9),
+      0 0 40px rgba(0, 232, 255, 0.5),
+      0 2px 4px rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── DESCRIPCIÓN "Semi Formal" ─── */
+  .desc-vest {
+    color: #00e8ff;
+    text-shadow:
+      0 0 14px rgba(0, 232, 255, 0.8),
+      0 0 28px rgba(0, 232, 255, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ─── NOTA ─── */
+  .nota-vest {
+    color: #ffffff;
+    text-shadow:
+      0 1px 6px rgba(0, 0, 0, 0.5),
+      0 0 12px rgba(0, 232, 255, 0.2);
+    font-weight: 600;
+  }
+
+  /* ─── ICONO CYAN ─── */
+  .icono-cyan {
+    filter: brightness(0) saturate(100%) invert(85%) sepia(60%) saturate(400%)
+      hue-rotate(155deg) brightness(115%) contrast(100%);
+    transition:
+      filter 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .icono-cyan:hover {
+    transform: scale(1.05);
+    filter: brightness(0) saturate(100%) invert(85%) sepia(60%) saturate(400%)
+      hue-rotate(155deg) brightness(130%) contrast(100%);
+  }
+
+  /* ─── CELESTE ─── */
+  .texto-celeste {
+    color: #00e8ff;
+    text-shadow:
+      0 0 14px rgba(0, 232, 255, 0.8),
+      0 0 28px rgba(0, 232, 255, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ─── VERDE AGUA ─── */
+  .texto-verde {
+    color: #7fffd4;
+    text-shadow:
+      0 0 14px rgba(127, 255, 212, 0.8),
+      0 0 28px rgba(127, 255, 212, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+</style>

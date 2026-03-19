@@ -1,0 +1,413 @@
+<section class="relative text-black w-full overflow-x-hidden hero-disco">
+    <canvas
+        id="disco-particles"
+        class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+    <div
+        id="sparkle-layer"
+        class="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+    >
+    </div>
+
+    <div
+        class="relative w-full overflow-hidden"
+        id="flores-arriba"
+        style="opacity: 1 !important;"
+    >
+        <img
+            src="/imagenes/esferas.png"
+            alt="Esferas decorativas"
+            class="w-full h-auto object-cover object-center block"
+            style="opacity: 1 !important;"
+        />
+
+        <div
+            class="absolute left-1/2 transform -translate-x-1/2 top-[100px] sm:top-16 md:top-12 lg:top-8 xl:top-4 z-50"
+            id="corona"
+        >
+            <div class="corona-neon-wrapper">
+                <div class="corona-ambient-glow"></div>
+                <img
+                    src="/imagenes/corona.png"
+                    alt="Corona de quinceañera"
+                    class="corona-neon-img w-24 h-auto sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 object-contain mx-auto"
+                />
+            </div>
+        </div>
+    </div>
+
+    <div class="relative w-full sm:pt-40 md:pt-48 overflow-hidden px-4 z-10">
+        <div class="flex justify-center w-full">
+            <div class="text-center max-w-4xl w-full">
+                <!-- Eyebrow + Título SIN ningún efecto, blanco puro -->
+                <div
+                    class="relative text-center z-30 mb-6 w-full"
+                    id="titulo-container"
+                >
+                    <!-- <p class="disco-eyebrow" id="eyebrow-line">
+                        ✦ &nbsp; celebrando &nbsp; ✦
+                    </p> -->
+                    <h1 class="titulo-disco" id="titulo">MIS XV AÑOS</h1>
+                </div>
+
+                <!-- Nombre: neón cian igual a la corona -->
+                <div class="nombre-disco-wrap mb-10" id="nombre-container">
+                    <h2
+                        class="font-great-vibes nombre-disco"
+                        id="nombre-typewriter"
+                    >
+                    </h2>
+                </div>
+
+                <div
+                    class="relative w-full overflow-visible"
+                    id="foto-container"
+                >
+                    <div class="relative flex justify-center">
+                        <img
+                            src="/imagenes/silueta.png"
+                            alt="Foto de quinceañera"
+                            class="w-full max-w-[65vw] h-auto sm:max-w-[55vw] md:max-w-[45vw] lg:max-w-[35vw] xl:max-w-[30vw] object-contain"
+                            id="foto-quinceañera"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        /* Partículas */
+        (function () {
+            const canvas = document.getElementById(
+                "disco-particles",
+            ) as HTMLCanvasElement;
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d")!;
+            function resize() {
+                canvas.width = canvas.parentElement!.offsetWidth;
+                canvas.height = canvas.parentElement!.offsetHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+            const colors = [
+                "#00f5ff",
+                "#ffffff",
+                "#d4aa40",
+                "#a0c8ff",
+                "#ffe066",
+                "#80eaff",
+            ];
+            const dots = Array.from({ length: 70 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: 0.8 + Math.random() * 2,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 0.2 + Math.random() * 0.7,
+            }));
+            let frame = 0;
+            (function tick() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                frame++;
+                dots.forEach((d: any) => {
+                    d.x += d.vx;
+                    d.y += d.vy;
+                    if (d.x < 0) d.x = canvas.width;
+                    if (d.x > canvas.width) d.x = 0;
+                    if (d.y < 0) d.y = canvas.height;
+                    if (d.y > canvas.height) d.y = 0;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                    ctx.fillStyle = d.color;
+                    ctx.globalAlpha =
+                        d.alpha * (0.5 + 0.5 * Math.sin(frame * 0.03 + d.x));
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(tick);
+            })();
+        })();
+
+        /* Destellos */
+        (function () {
+            const layer = document.getElementById("sparkle-layer");
+            if (!layer) return;
+            for (let i = 0; i < 18; i++) {
+                const s = document.createElement("div");
+                s.className = "sparkle-star";
+                s.style.cssText = `left:${5 + Math.random() * 90}%;top:${5 + Math.random() * 90}%;--d:${2.5 + Math.random() * 3.5}s;--dl:${-Math.random() * 4}s;width:${3 + Math.floor(Math.random() * 3) * 2}px;height:${3 + Math.floor(Math.random() * 3) * 2}px;`;
+                layer.appendChild(s);
+            }
+        })();
+
+        /* GSAP */
+        gsap.set("#flores-arriba", { clearProps: "all" });
+
+        gsap.fromTo(
+            "#corona",
+            { opacity: 0, scale: 0.4, y: -20 },
+            {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 1.4,
+                ease: "back.out(1.4)",
+                delay: 0.2,
+            },
+        );
+        gsap.fromTo(
+            "#eyebrow-line",
+            { opacity: 0 },
+            { opacity: 1, duration: 1, ease: "power2.out", delay: 0.6 },
+        );
+        gsap.fromTo(
+            "#titulo",
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: 0.8 },
+        );
+        gsap.fromTo(
+            "#foto-container",
+            { opacity: 0, scale: 0.85, y: 40 },
+            {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 1.3,
+                ease: "power2.out",
+                delay: 0.4,
+            },
+        );
+
+        /* Nombre - se construye con spans y se aplica la clase DESPUÉS de insertarlos */
+        function animarNombre() {
+            const texto = "Ariane Nicole";
+            const contenedor = document.getElementById("nombre-typewriter");
+            if (!contenedor) return;
+
+            // Construimos el HTML primero
+            let html = "";
+            texto.split("").forEach((letra, i) => {
+                if (letra === " ") {
+                    html += `<span style="display:inline-block;width:0.3em;"></span>`;
+                } else {
+                    // Inline style con todo el neón directamente aquí,
+                    // así no depende de que la clase CSS cargue correctamente
+                    html += `<span
+                        class="letra-neon"
+                        style="
+                            --i:${i};
+                            display:inline-block;
+                            opacity:0;
+                            color:#00f0ff;
+                            text-shadow:
+                                0 0 7px #00f5ff,
+                                0 0 15px #00f5ff,
+                                0 0 30px #00d0e8,
+                                0 0 60px #0090b0,
+                                0 0 90px #006080;
+                            transform:translateY(40px) scale(0.6);
+                            filter:blur(8px);
+                            animation: neonNombreKF 2.6s ease-in-out infinite;
+                            animation-delay: calc(${i} * 0.07s);
+                        "
+                    >${letra}</span>`;
+                }
+            });
+            contenedor.innerHTML = html;
+
+            gsap.to(".letra-neon", {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                filter: "blur(0px)",
+                duration: 0.75,
+                ease: "back.out(1.8)",
+                stagger: { each: 0.09, from: "start" },
+                delay: 1.0,
+            });
+        }
+
+        animarNombre();
+
+        // Sin float — el nombre queda quieto
+    });
+</script>
+
+<style>
+    .hero-disco {
+        position: relative;
+    }
+
+    #flores-arriba,
+    #flores-arriba img {
+        opacity: 1 !important;
+    }
+
+    /* ── Corona neón ── */
+    .corona-neon-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .corona-neon-img {
+        filter: drop-shadow(0 0 4px #00f5ff) drop-shadow(0 0 10px #00f5ff)
+            drop-shadow(0 0 24px #00c8e0) drop-shadow(0 0 44px #007a9a);
+        animation: neonPulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes neonPulse {
+        0%,
+        100% {
+            filter: drop-shadow(0 0 4px #00f5ff) drop-shadow(0 0 12px #00f5ff)
+                drop-shadow(0 0 28px #00c8e0) drop-shadow(0 0 50px #007a9a);
+            opacity: 1;
+        }
+        50% {
+            filter: drop-shadow(0 0 2px #00f5ff) drop-shadow(0 0 6px #00c8e0)
+                drop-shadow(0 0 14px #006a80) drop-shadow(0 0 28px #003d55);
+            opacity: 0.82;
+        }
+    }
+
+    .corona-ambient-glow {
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 85%;
+        height: 18px;
+        background: radial-gradient(
+            ellipse,
+            rgba(0, 245, 255, 0.22) 0%,
+            transparent 75%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        animation: ambientPulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes ambientPulse {
+        0%,
+        100% {
+            opacity: 1;
+            transform: translateX(-50%) scaleX(1);
+        }
+        50% {
+            opacity: 0.4;
+            transform: translateX(-50%) scaleX(0.8);
+        }
+    }
+
+    /* ── Eyebrow: cian simple ── */
+    .disco-eyebrow {
+        font-family: "Crimson Text", serif;
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
+        letter-spacing: 0.2em;
+        color: #00e8ff;
+        margin-bottom: 6px;
+    }
+
+    /* ── Título: BLANCO PURO, sin sombra, sin efecto ── */
+    .titulo-disco {
+        font-family: "Crimson Text", serif;
+        font-weight: 500;
+        font-size: clamp(2rem, 7vw, 3.8rem);
+        letter-spacing: 0.18em;
+        color: #ffffff;
+        text-shadow: none;
+        animation: none;
+    }
+
+    /* ── Nombre ── */
+    .nombre-disco-wrap {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .nombre-disco {
+        font-size: clamp(3.8rem, 11vw, 6.5rem);
+        line-height: 1.1;
+        letter-spacing: 0.03em;
+    }
+
+    /* Keyframe para el pulso del neón en el nombre */
+    @keyframes neonNombreKF {
+        0%,
+        100% {
+            text-shadow:
+                0 0 7px #00f5ff,
+                0 0 15px #00f5ff,
+                0 0 30px #00d0e8,
+                0 0 60px #0090b0,
+                0 0 90px #006080;
+            opacity: 1;
+        }
+        50% {
+            text-shadow:
+                0 0 4px #00d8e8,
+                0 0 9px #00b0c8,
+                0 0 18px #008090,
+                0 0 35px #005060;
+            opacity: 0.8;
+        }
+    }
+
+    /* Clase letra-neon como respaldo (el inline style tiene prioridad) */
+    .letra-neon {
+        color: #00f0ff;
+        will-change: transform, opacity;
+        text-shadow:
+            0 0 7px #00f5ff,
+            0 0 15px #00f5ff,
+            0 0 30px #00d0e8,
+            0 0 60px #0090b0;
+        animation: neonNombreKF 2.6s ease-in-out infinite;
+    }
+
+    /* ── Destellos ── */
+    .sparkle-star {
+        position: absolute;
+        background: #fff;
+        clip-path: polygon(
+            50% 0%,
+            61% 35%,
+            98% 35%,
+            68% 57%,
+            79% 91%,
+            50% 70%,
+            21% 91%,
+            32% 57%,
+            2% 35%,
+            39% 35%
+        );
+        animation: sparkleTwinkle var(--d, 3s) ease-in-out infinite
+            var(--dl, 0s);
+        opacity: 0;
+    }
+
+    @keyframes sparkleTwinkle {
+        0% {
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+        }
+        25% {
+            opacity: 1;
+            transform: scale(1) rotate(45deg);
+        }
+        75% {
+            opacity: 0.6;
+            transform: scale(0.8) rotate(90deg);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
+        }
+    }
+</style>

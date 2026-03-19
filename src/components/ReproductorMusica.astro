@@ -1,0 +1,566 @@
+<!-- REPRODUCTOR DE MÚSICA CON TIMING INTELIGENTE -->
+<div
+  class="w-full max-w-[350px] sm:max-w-sm mx-auto mt-12 sm:mt-16 px-4"
+  id="music-player-container"
+>
+  <!-- Card principal con efecto glass disco -->
+  <div
+    class="player-card rounded-3xl p-6 sm:p-8 relative overflow-hidden"
+    id="player-card"
+  >
+    <!-- Destellos de fondo -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-[#00e8ff]/8 via-transparent to-[#d4aa40]/6 pointer-events-none"
+    >
+    </div>
+    <div
+      class="absolute -top-20 -right-20 w-40 h-40 bg-[#00e8ff]/8 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+    <div
+      class="absolute -bottom-20 -left-20 w-32 h-32 bg-[#d4aa40]/8 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+
+    <!-- Contenido del reproductor -->
+    <div class="relative z-10">
+      <!-- Título -->
+      <div class="text-center mb-3" id="player-title">
+        <div class="text-center z-30 mb-2 w-full" id="titulo-container">
+          <div
+            class="flex items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8"
+          >
+            <!-- Mariposa izquierda -->
+            <div id="mariposa-izq" class="flex-shrink-0">
+              <img
+                src="/gif/esferagif.gif"
+                alt="Mariposa izquierda"
+                class="w-8 h-auto sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain"
+              />
+            </div>
+
+            <!-- Texto central -->
+            <div id="titulo" class="flex-shrink min-w-0">
+              <h3
+                class="font-great-vibes text-xl sm:text-2xl md:text-3xl titulo-neon mb-2"
+              >
+                Mi Canción Especial
+              </h3>
+            </div>
+
+            <!-- Mariposa derecha -->
+            <div id="mariposa-der" class="flex-shrink-0">
+              <img
+                src="/gif/esferagif.gif"
+                alt="Mariposa derecha"
+                class="w-8 h-auto sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain scale-x-[-1]"
+              />
+            </div>
+          </div>
+        </div>
+        <p
+          id="romantic-text"
+          class="text-xs sm:text-sm romantic-text font-medium w-full text-center"
+        >
+          ✨ Una melodía para recordar siempre ✨
+        </p>
+      </div>
+
+      <!-- Controles principales -->
+      <div
+        class="flex items-center justify-center space-x-6 sm:space-x-10"
+        id="controls-container"
+      >
+        <!-- Botón anterior -->
+        <button
+          id="prevBtn"
+          class="btn-control transition-all duration-300 text-xl sm:text-2xl p-3 rounded-full focus:outline-none"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 6v12l-2-2V8l2-2zm2 6l8-5v10l-8-5z"></path>
+          </svg>
+        </button>
+
+        <!-- Botón corazón play/pause -->
+        <button
+          id="playPauseBtn"
+          class="relative text-4xl sm:text-5xl transition-all duration-300 transform hover:scale-110 focus:outline-none group"
+        >
+          <div
+            class="absolute inset-0 heart-glow rounded-full blur-lg scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+          </div>
+
+          <div class="relative z-10 transform transition-all duration-300">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="heart-icon drop-shadow-lg"
+            >
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              ></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg
+                id="play-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="white"
+                class="drop-shadow-sm"
+              >
+                <path d="M8 5v14l11-7z"></path>
+              </svg>
+              <svg
+                id="pause-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="white"
+                class="hidden drop-shadow-sm"
+              >
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div
+            class="absolute inset-0 pointer-events-none"
+            id="heart-particles"
+          >
+          </div>
+        </button>
+
+        <!-- Botón siguiente -->
+        <button
+          id="nextBtn"
+          class="btn-control transition-all duration-300 text-xl sm:text-2xl p-3 rounded-full focus:outline-none"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 18V6l2 2v8l-2 2zm-2-6L7 7v10l8-5z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Barra de progreso -->
+      <div class="px-2 sm:px-4" id="progress-container">
+        <div
+          class="flex items-center justify-between text-xs sm:text-sm time-text mb-3 font-medium"
+        >
+          <span id="currentTime">0:00</span>
+          <span class="note-icon">♪</span>
+          <span id="totalDuration">--:--</span>
+        </div>
+        <div class="relative">
+          <input
+            type="range"
+            id="progressBar"
+            value="0"
+            max="100"
+            class="w-full h-2 rounded-full appearance-none cursor-pointer slider-elegant"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="music-audio" preload="auto">
+  <source src="/audio/loscapos.mp3" type="audio/mpeg" />
+  Tu navegador no soporta audio HTML5.
+</audio>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let isPlaying = false;
+  let currentTime = 0;
+  let duration = 0;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    gsap.set("#music-player-container", { opacity: 0, y: 50, scale: 0.9 });
+    gsap.set("#player-title", { opacity: 0, y: 30 });
+    gsap.set("#controls-container", { opacity: 0, scale: 0.8 });
+    gsap.set("#progress-container", { opacity: 0, y: 20 });
+    gsap.set("#romantic-text", { opacity: 0 });
+
+    ScrollTrigger.create({
+      trigger: "#music-player-container",
+      start: "top 100%",
+      end: "bottom 5%",
+      onEnter: () => animatePlayerIn(),
+      onEnterBack: () => animatePlayerIn(),
+      onLeaveBack: () => animatePlayerOut(),
+    });
+
+    function animatePlayerIn() {
+      const tl = gsap.timeline();
+      tl.to("#music-player-container", {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power3.out",
+      })
+        .to(
+          "#player-title",
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          "-=0.4",
+        )
+        .to(
+          "#controls-container",
+          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" },
+          "-=0.3",
+        )
+        .to(
+          "#progress-container",
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          "-=0.4",
+        )
+        .to(
+          "#romantic-text",
+          { opacity: 0.8, duration: 0.4, ease: "power2.out" },
+          "-=0.3",
+        );
+    }
+
+    function animatePlayerOut() {
+      const tl = gsap.timeline();
+      tl.to("#romantic-text", { opacity: 0, duration: 0.3, ease: "power2.in" })
+        .to(
+          "#progress-container",
+          { opacity: 0, y: 20, duration: 0.4, ease: "power2.in" },
+          "-=0.2",
+        )
+        .to(
+          "#controls-container",
+          { opacity: 0, scale: 0.8, duration: 0.4, ease: "back.in(1.2)" },
+          "-=0.3",
+        )
+        .to(
+          "#player-title",
+          { opacity: 0, y: 30, duration: 0.4, ease: "power2.in" },
+          "-=0.3",
+        )
+        .to(
+          "#music-player-container",
+          { opacity: 0, y: 50, scale: 0.9, duration: 0.5, ease: "power3.in" },
+          "-=0.3",
+        );
+    }
+
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const progressBar = document.getElementById("progressBar");
+
+    if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlayPause);
+    if (prevBtn) prevBtn.addEventListener("click", previousTrack);
+    if (nextBtn) nextBtn.addEventListener("click", nextTrack);
+    if (progressBar) progressBar.addEventListener("input", seekAudio);
+
+    const audioElement = document.getElementById("music-audio");
+    if (audioElement instanceof HTMLAudioElement) {
+      audioElement.addEventListener("loadedmetadata", () => {
+        duration = audioElement.duration;
+        updateTimeDisplay();
+      });
+      audioElement.addEventListener("canplaythrough", () => {
+        if (duration === 0 && audioElement.duration) {
+          duration = audioElement.duration;
+          updateTimeDisplay();
+        }
+      });
+    }
+  });
+
+  function togglePlayPause() {
+    const audioElement = document.getElementById("music-audio");
+    const playIcon = document.getElementById("play-icon");
+    const pauseIcon = document.getElementById("pause-icon");
+    const heartBtn = document.getElementById("playPauseBtn");
+    if (!(audioElement instanceof HTMLAudioElement)) return;
+
+    if (!isPlaying) {
+      audioElement.play().catch((e) => console.log("Error:", e));
+      if (playIcon) playIcon.classList.add("hidden");
+      if (pauseIcon) pauseIcon.classList.remove("hidden");
+      gsap.to(heartBtn, {
+        scale: 1.2,
+        duration: 0.2,
+        yoyo: true,
+        repeat: 1,
+        ease: "power2.out",
+      });
+      createHeartParticles();
+      isPlaying = true;
+      startProgress();
+    } else {
+      audioElement.pause();
+      if (playIcon) playIcon.classList.remove("hidden");
+      if (pauseIcon) pauseIcon.classList.add("hidden");
+      isPlaying = false;
+    }
+  }
+
+  function createHeartParticles() {
+    const container = document.getElementById("heart-particles");
+    if (!container) return;
+    for (let i = 0; i < 6; i++) {
+      const particle = document.createElement("div");
+      particle.innerHTML = "💖";
+      particle.style.cssText = `position:absolute;font-size:12px;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;`;
+      container.appendChild(particle);
+      gsap.to(particle, {
+        opacity: 1,
+        scale: 1.5,
+        x: (Math.random() - 0.5) * 100,
+        y: (Math.random() - 0.5) * 100,
+        rotation: Math.random() * 360,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: i * 0.1,
+        onComplete: () =>
+          gsap.to(particle, {
+            opacity: 0,
+            scale: 0.5,
+            duration: 0.4,
+            onComplete: () => particle.remove(),
+          }),
+      });
+    }
+  }
+
+  function previousTrack() {
+    gsap.to("#prevBtn", { scale: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
+  }
+
+  function nextTrack() {
+    gsap.to("#nextBtn", { scale: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
+  }
+
+  function seekAudio() {
+    const progressBarElement = document.getElementById("progressBar");
+    const audioElement = document.getElementById("music-audio");
+    if (
+      progressBarElement instanceof HTMLInputElement &&
+      audioElement instanceof HTMLAudioElement
+    ) {
+      const value = Number(progressBarElement.value) || 0;
+      audioElement.currentTime = (value / 100) * audioElement.duration;
+      currentTime = audioElement.currentTime;
+      updateTimeDisplay();
+    }
+  }
+
+  function startProgress() {
+    const audioElement = document.getElementById("music-audio");
+    if (!(audioElement instanceof HTMLAudioElement)) return;
+    const interval = setInterval(() => {
+      if (!isPlaying) {
+        clearInterval(interval);
+        return;
+      }
+      currentTime = audioElement.currentTime;
+      duration = audioElement.duration || duration;
+      if (currentTime >= duration) {
+        isPlaying = false;
+        const playIcon = document.getElementById("play-icon");
+        const pauseIcon = document.getElementById("pause-icon");
+        if (playIcon) playIcon.classList.remove("hidden");
+        if (pauseIcon) pauseIcon.classList.add("hidden");
+        clearInterval(interval);
+      }
+      updateProgress();
+    }, 100);
+  }
+
+  function updateProgress() {
+    const progressBarElement = document.getElementById("progressBar");
+    if (progressBarElement instanceof HTMLInputElement) {
+      progressBarElement.value = (
+        duration > 0 ? (currentTime / duration) * 100 : 0
+      ).toString();
+    }
+    updateTimeDisplay();
+  }
+
+  function updateTimeDisplay() {
+    const currentTimeEl = document.getElementById("currentTime");
+    const totalDurationEl = document.getElementById("totalDuration");
+    const audioElement = document.getElementById("music-audio");
+    if (audioElement instanceof HTMLAudioElement) {
+      if (currentTimeEl) {
+        const m = Math.floor(audioElement.currentTime / 60);
+        const s = Math.floor(audioElement.currentTime % 60);
+        currentTimeEl.textContent = `${m}:${s.toString().padStart(2, "0")}`;
+      }
+      if (totalDurationEl && audioElement.duration) {
+        const tm = Math.floor(audioElement.duration / 60);
+        const ts = Math.floor(audioElement.duration % 60);
+        totalDurationEl.textContent = `${tm}:${ts.toString().padStart(2, "0")}`;
+      } else if (totalDurationEl && duration > 0) {
+        const tm = Math.floor(duration / 60);
+        const ts = Math.floor(duration % 60);
+        totalDurationEl.textContent = `${tm}:${ts.toString().padStart(2, "0")}`;
+      }
+    }
+  }
+</script>
+
+<style>
+  /* ── Card: glass oscuro transparente, borde cian suave ── */
+  .player-card {
+    background: rgba(2, 15, 35, 0.35);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(0, 232, 255, 0.18);
+    box-shadow:
+      0 4px 24px rgba(0, 200, 240, 0.08),
+      0 1px 0 rgba(0, 232, 255, 0.12) inset,
+      0 -1px 0 rgba(212, 170, 64, 0.08) inset;
+  }
+
+  /* Borde brillante al hover */
+  .player-card:hover {
+    border-color: rgba(0, 232, 255, 0.32);
+    box-shadow:
+      0 6px 32px rgba(0, 200, 240, 0.14),
+      0 1px 0 rgba(0, 232, 255, 0.2) inset;
+    transition: all 0.4s ease;
+  }
+
+  /* ── Título: neón cian igual al nombre del hero ── */
+  .titulo-neon {
+    color: #00e8ff;
+    text-shadow:
+      0 0 6px #00f5ff,
+      0 0 14px #00f5ff,
+      0 0 28px #00c8e0,
+      0 0 50px #007a9a;
+    animation: neonTitlePulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes neonTitlePulse {
+    0%,
+    100% {
+      text-shadow:
+        0 0 6px #00f5ff,
+        0 0 14px #00f5ff,
+        0 0 28px #00c8e0,
+        0 0 50px #007a9a;
+    }
+    50% {
+      text-shadow:
+        0 0 3px #00d0e0,
+        0 0 7px #00b0c8,
+        0 0 14px #006a80;
+    }
+  }
+
+  /* ── Texto romántico: dorado suave ── */
+  .romantic-text {
+    color: rgba(212, 170, 64, 0.75);
+  }
+
+  /* ── Botones prev/next: cian translúcido ── */
+  .btn-control {
+    color: rgba(0, 232, 255, 0.55);
+  }
+  .btn-control:hover {
+    color: #00e8ff;
+    background: rgba(0, 232, 255, 0.1);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 232, 255, 0.2);
+  }
+
+  /* ── Corazón: dorado con brillo cian al hover ── */
+  .heart-icon {
+    color: #d4aa40;
+    filter: drop-shadow(0 0 4px rgba(212, 170, 64, 0.6))
+      drop-shadow(0 0 10px rgba(212, 170, 64, 0.3));
+  }
+
+  .heart-glow {
+    background: radial-gradient(circle, rgba(0, 232, 255, 0.2), transparent);
+  }
+
+  /* Latido al hover */
+  @keyframes heartbeat {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    75% {
+      transform: scale(1.15);
+    }
+  }
+  #playPauseBtn:hover {
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  /* ── Tiempos: cian tenue ── */
+  .time-text {
+    color: rgba(0, 220, 255, 0.55);
+  }
+  .note-icon {
+    color: rgba(0, 220, 255, 0.3);
+  }
+
+  /* ── Barra de progreso: cian/dorado ── */
+  .slider-elegant {
+    background: linear-gradient(
+      to right,
+      rgba(0, 232, 255, 0.2),
+      rgba(212, 170, 64, 0.12)
+    );
+    outline: none;
+    border-radius: 15px;
+  }
+
+  .slider-elegant::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c8e0, #00e8ff);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0, 232, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+  }
+
+  .slider-elegant::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 14px rgba(0, 232, 255, 0.7);
+  }
+
+  .slider-elegant::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c8e0, #00e8ff);
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 8px rgba(0, 232, 255, 0.5);
+  }
+
+  @media (max-width: 640px) {
+    .player-card {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  }
+</style>

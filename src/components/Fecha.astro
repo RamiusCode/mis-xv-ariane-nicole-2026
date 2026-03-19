@@ -1,0 +1,269 @@
+---
+// FechaEvento.astro
+---
+
+<section class="py-4 px-4">
+  <div class="max-w-2xl mx-auto text-center">
+    <!-- Separador superior SVG dorado -->
+    <div class="flex justify-center mb-8" id="flores-fecha">
+      <svg
+        viewBox="0 0 280 36"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        class="w-40 md:w-56 lg:w-64 h-auto"
+      >
+        <!-- Línea dorada punteada -->
+        <line
+          x1="10"
+          y1="18"
+          x2="270"
+          y2="18"
+          stroke="#d4aa40"
+          stroke-width="0.8"
+          stroke-dasharray="4 3"
+          opacity="0.6"></line>
+        <!-- Rombo central dorado -->
+        <polygon
+          points="140,6 150,18 140,30 130,18"
+          fill="none"
+          stroke="#d4aa40"
+          stroke-width="1.2"
+          opacity="0.9"></polygon>
+        <polygon
+          points="140,11 146,18 140,25 134,18"
+          fill="#d4aa40"
+          opacity="0.35"></polygon>
+        <!-- Rombos laterales pequeños -->
+        <polygon
+          points="90,13 96,18 90,23 84,18"
+          fill="none"
+          stroke="#d4aa40"
+          stroke-width="1"
+          opacity="0.7"></polygon>
+        <polygon
+          points="190,13 196,18 190,23 184,18"
+          fill="none"
+          stroke="#d4aa40"
+          stroke-width="1"
+          opacity="0.7"></polygon>
+        <!-- Puntos decorativos -->
+        <circle cx="55" cy="18" r="2" fill="#d4aa40" opacity="0.5"></circle>
+        <circle cx="225" cy="18" r="2" fill="#d4aa40" opacity="0.5"></circle>
+        <circle cx="30" cy="18" r="1.2" fill="#d4aa40" opacity="0.35"></circle>
+        <circle cx="250" cy="18" r="1.2" fill="#d4aa40" opacity="0.35"></circle>
+        <!-- Destellos cian pequeños -->
+        <circle cx="115" cy="10" r="1.2" fill="#00e8ff" opacity="0.6"></circle>
+        <circle cx="165" cy="10" r="1.2" fill="#00e8ff" opacity="0.6"></circle>
+        <circle cx="115" cy="26" r="1" fill="#00e8ff" opacity="0.4"></circle>
+        <circle cx="165" cy="26" r="1" fill="#00e8ff" opacity="0.4"></circle>
+      </svg>
+    </div>
+
+    <!-- Texto "Acompáñanos este día tan especial" -->
+    <div class="mb-4" id="texto-invitacion-container">
+      <div
+        class="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 px-4"
+      >
+        <div id="mariposa-invitacion-izq" class="flex-shrink-0">
+          <img
+            src="/gif/esferagif.gif"
+            alt="Mariposa izquierda"
+            class="w-10 h-auto sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain"
+          />
+        </div>
+
+        <div id="texto-invitacion" class="flex-shrink-0">
+          <p
+            class="font-charm text-2xl sm:text-3xl md:text-4xl leading-relaxed text-center texto-invitacion"
+          >
+            Acompáñanos este día<br />tan especial
+          </p>
+        </div>
+
+        <div id="mariposa-invitacion-der" class="flex-shrink-0">
+          <img
+            src="/gif/esferagif.gif"
+            alt="Mariposa derecha"
+            class="w-10 h-auto sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain transform scale-x-[-1]"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Fecha -->
+    <div class="relative max-w-md mx-auto" id="fecha-evento">
+      <div class="flex items-center justify-center gap-4 md:gap-6">
+        <!-- SÁBADO -->
+        <div class="flex flex-col items-center w-24 md:w-28">
+          <div class="w-full h-px linea-fecha mb-2"></div>
+          <span
+            class="font-charm text-xl md:text-lg uppercase tracking-wider font-bold text-center dia-mes"
+          >
+            SÁBADO
+          </span>
+          <div class="w-full h-px linea-fecha mt-2"></div>
+        </div>
+
+        <!-- Número día -->
+        <div
+          class="flex items-center justify-center min-w-[80px] md:min-w-[100px]"
+        >
+          <span
+            class="font-charm text-7xl md:text-8xl font-bold -ml-1 numero-dia"
+            >28</span
+          >
+        </div>
+
+        <!-- FEBRERO -->
+        <div class="flex flex-col items-center w-24 md:w-28">
+          <div class="w-full h-px linea-fecha mb-2"></div>
+          <span
+            class="font-charm text-xl md:text-lg uppercase tracking-wider font-bold text-center dia-mes"
+          >
+            MARZO
+          </span>
+          <div class="w-full h-px linea-fecha mt-2"></div>
+        </div>
+      </div>
+
+      <!-- Año -->
+      <div class="mt-2 flex justify-center" id="anio-evento">
+        <p
+          class="font-charm text-3xl md:text-4xl font-bold -translate-x-2 anio-texto"
+        >
+          2026
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.set("#flores-fecha", { opacity: 0, scale: 0.8 });
+      gsap.set("#mariposa-invitacion-izq", { opacity: 0, x: -50 });
+      gsap.set("#mariposa-invitacion-der", { opacity: 0, x: 50 });
+      gsap.set("#texto-invitacion", { opacity: 0, scale: 0.9 });
+      gsap.set("#fecha-evento", { opacity: 0, scale: 0.9 });
+      gsap.set("#anio-evento", { opacity: 0, scale: 0.9 });
+
+      ScrollTrigger.create({
+        trigger: "#flores-fecha",
+        start: "top 85%",
+        end: "top 20%",
+        onEnter: () => {
+          const tl = gsap.timeline();
+          tl.to(
+            "#flores-fecha, #mariposa-invitacion-izq, #mariposa-invitacion-der, #texto-invitacion, #fecha-evento, #anio-evento",
+            { opacity: 1, duration: 1, ease: "power2.out" },
+          )
+            .to(
+              "#flores-fecha",
+              { scale: 1, duration: 1, ease: "back.out(1.4)" },
+              "<",
+            )
+            .to(
+              "#mariposa-invitacion-izq",
+              { x: 0, duration: 1, ease: "power2.out" },
+              "<",
+            )
+            .to(
+              "#mariposa-invitacion-der",
+              { x: 0, duration: 1, ease: "power2.out" },
+              "<",
+            )
+            .to(
+              "#texto-invitacion, #fecha-evento, #anio-evento",
+              { scale: 1, duration: 1, ease: "back.out(1.2)" },
+              "<",
+            );
+
+          gsap.to("#mariposa-invitacion-izq", {
+            y: -8,
+            duration: 2.5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 0.5,
+          });
+          gsap.to("#mariposa-invitacion-der", {
+            y: -8,
+            duration: 2.5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 0.5,
+          });
+        },
+        onLeaveBack: () => {
+          const tl = gsap.timeline();
+          tl.to(
+            "#flores-fecha, #mariposa-invitacion-izq, #mariposa-invitacion-der, #texto-invitacion, #fecha-evento, #anio-evento",
+            { opacity: 0, duration: 0.5, ease: "power2.in" },
+          )
+            .to(
+              "#flores-fecha",
+              { scale: 0.8, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#mariposa-invitacion-izq",
+              { x: -50, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#mariposa-invitacion-der",
+              { x: 50, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#texto-invitacion, #fecha-evento, #anio-evento",
+              { scale: 0.9, duration: 0.5, ease: "power2.in" },
+              "<",
+            );
+        },
+      });
+    });
+  }
+</script>
+
+<style>
+  /* Texto "Acompáñanos...": blanco puro */
+  .texto-invitacion {
+    color: #ffffff;
+  }
+
+  /* SÁBADO / FEBRERO: cian neón */
+  .dia-mes {
+    color: #00e8ff;
+    text-shadow:
+      0 0 6px #00f5ff,
+      0 0 14px #00c8e0,
+      0 0 28px #007a9a;
+  }
+
+  /* Número del día: dorado con brillo */
+  .numero-dia {
+    color: #d4aa40;
+    text-shadow:
+      0 0 10px rgba(212, 170, 64, 0.7),
+      0 0 24px rgba(212, 170, 64, 0.35);
+  }
+
+  /* Año: blanco puro */
+  .anio-texto {
+    color: #ffffff;
+  }
+
+  /* Líneas horizontales: doradas */
+  .linea-fecha {
+    background: linear-gradient(to right, transparent, #d4aa40, transparent);
+    opacity: 0.7;
+  }
+</style>

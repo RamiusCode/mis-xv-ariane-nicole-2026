@@ -1,0 +1,118 @@
+<!-- Padres.astro -->
+<section class="py-8 relative">
+  <div class="max-w-5xl mx-auto relative">
+    <!-- Adorno izquierdo -->
+    <div
+      class="absolute -left-0 top-0 w-16 md:w-20 lg:w-28 pointer-events-none"
+      id="adorno-izq"
+    >
+      <img
+        src="/imagenes/discolateral.png"
+        alt="Adorno floral"
+        class="w-10 h-full object-contain object-left"
+      />
+    </div>
+
+    <!-- Contenido central -->
+    <div
+      class="max-w-xl mx-auto text-center relative z-10 px-16 md:px-24 lg:px-32"
+    >
+      <!-- SECCIÓN: MIS PADRES -->
+      <div id="seccion-padres">
+        <h2 class="font-charm text-xl titulo-padres font-bold mb-1">
+          MIS PADRES
+        </h2>
+        <div class="space-y-2">
+          <p class="font-charm text-xl nombre-padres">
+            Ignacio Languidey Gualasua
+          </p>
+          <p class="font-charm text-xl nombre-padres">Evelin Guzmán Mendoza</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adorno derecho -->
+    <div
+      class="absolute -right-6 top-0 w-16 md:w-20 lg:w-28 pointer-events-none"
+      id="adorno-der"
+    >
+      <img
+        src="/imagenes/discolateral.png"
+        alt="Adorno floral"
+        class="w-10 h-full object-contain object-right scale-x-[-1]"
+      />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.set("#seccion-padres", { opacity: 0, y: 30 });
+      gsap.set("#adorno-izq", { opacity: 0, x: -30 });
+      gsap.set("#adorno-der", { opacity: 0, x: 30 });
+
+      ScrollTrigger.create({
+        trigger: "#seccion-padres",
+        start: "top 90%",
+        end: "top 20%",
+        onEnter: () => animarSimultaneo(),
+        onLeaveBack: () => ocultarSimultaneo(),
+      });
+
+      function animarSimultaneo() {
+        const tl = gsap.timeline();
+        tl.to("#adorno-izq, #adorno-der, #seccion-padres", {
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+        })
+          .to("#adorno-izq", { x: 0, duration: 1, ease: "power2.out" }, "<")
+          .to("#adorno-der", { x: 0, duration: 1, ease: "power2.out" }, "<")
+          .to(
+            "#seccion-padres",
+            { y: 0, duration: 1, ease: "power2.out" },
+            "<",
+          );
+      }
+
+      function ocultarSimultaneo() {
+        const tl = gsap.timeline();
+        tl.to("#adorno-izq, #adorno-der, #seccion-padres", {
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.in",
+        })
+          .to("#adorno-izq", { x: -30, duration: 0.5, ease: "power2.in" }, "<")
+          .to("#adorno-der", { x: 30, duration: 0.5, ease: "power2.in" }, "<")
+          .to(
+            "#seccion-padres",
+            { y: 30, duration: 0.5, ease: "power2.in" },
+            "<",
+          );
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Título "MIS PADRES": cian neón */
+  .titulo-padres {
+    color: #00e8ff;
+    text-shadow:
+      0 0 6px #00f5ff,
+      0 0 14px #00c8e0,
+      0 0 28px #007a9a;
+  }
+
+  /* Nombres: blanco puro, sin efecto */
+  .nombre-padres {
+    color: #ffffff;
+    text-shadow: none;
+  }
+</style>

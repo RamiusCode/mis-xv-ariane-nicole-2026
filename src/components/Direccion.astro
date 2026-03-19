@@ -1,0 +1,337 @@
+---
+// Direccion.astro - Quinceañera Edition ✨
+---
+
+<section class="py-8 px-4 relative">
+  <div class="max-w-xl mx-auto text-center relative">
+    <!-- TÍTULO DIRECCIÓN -->
+    <div class="mb-2" id="titulo-direccion">
+      <h2
+        class="font-charm text-2xl md:text-3xl font-bold tracking-wide titulo-dir"
+      >
+        RECEPCIÓN SOCIAL
+      </h2>
+    </div>
+
+    <!-- 🏛️ ICONO DIRECCIÓN CON MARIPOSAS -->
+    <div
+      class="flex justify-center items-center gap-4 md:gap-6 mb-4"
+      id="icono-direccion"
+    >
+      <!-- 🦋 MARIPOSA IZQUIERDA -->
+      <div class="mariposa-flotante flex items-center" id="mariposa-dir-izq">
+        <img
+          src="/gif/esferagif.gif"
+          alt="Mariposa"
+          class="w-20 h-20 object-contain"
+        />
+      </div>
+
+      <!-- ICONO CENTRAL -->
+      <img
+        src="/imagenes/direccion.png"
+        alt="Icono de dirección"
+        class="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 object-contain icono-cyan"
+      />
+
+      <!-- 🦋 MARIPOSA DERECHA -->
+      <div class="mariposa-flotante flex items-center" id="mariposa-dir-der">
+        <img
+          src="/gif/esferagif.gif"
+          alt="Mariposa"
+          class="w-20 h-20 object-contain scale-x-[-1]"
+        />
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN DE UBICACIÓN -->
+    <div class="mb-4" id="info-direccion">
+      <!-- Nombre del lugar -->
+      <h3 class="font-charm text-xl md:text-2xl font-bold mb-2 nombre-lugar">
+        Casa Quinta los Pichones
+      </h3>
+
+      <!-- Dirección -->
+      <!-- <p class="font-charm text-lg md:text-xl leading-relaxed mb-3 texto-dir">
+        Calle Tupioza, entre Campero y Ballivián
+      </p> -->
+
+      <!-- Hora -->
+      <p class="font-charm text-xl md:text-2xl font-bold hora-dir">
+        Hora: 19:00
+      </p>
+    </div>
+
+    <!-- BOTÓN VER UBICACIÓN GENERADO -->
+    <div class="flex justify-center" id="boton-ubicacion">
+      <a
+        href="https://maps.app.goo.gl/fTdPo2GRJhHXhpSx7"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="boton-ubicacion-custom group"
+      >
+        <!-- Icono pin -->
+        <svg
+          class="boton-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"
+          ></path>
+        </svg>
+        <span class="font-charm text-lg font-bold boton-texto"
+          >Ver Ubicación</span
+        >
+        <!-- Brillo hover -->
+        <span class="boton-brillo"></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.set("#icono-direccion", { opacity: 0, scale: 0.8 });
+      gsap.set("#titulo-direccion", { opacity: 0, scale: 0.9 });
+      gsap.set("#info-direccion", { opacity: 0, scale: 0.9 });
+      gsap.set("#boton-ubicacion", { opacity: 0, scale: 0.9 });
+      gsap.set("#mariposa-dir-izq", { opacity: 0, x: -30 });
+      gsap.set("#mariposa-dir-der", { opacity: 0, x: 30 });
+
+      ScrollTrigger.create({
+        trigger: "#icono-direccion",
+        start: "top 85%",
+        end: "top 20%",
+        onEnter: () => {
+          const tl = gsap.timeline();
+
+          tl.to(
+            "#icono-direccion, #mariposa-dir-izq, #mariposa-dir-der, #titulo-direccion, #info-direccion, #boton-ubicacion",
+            { opacity: 1, duration: 1, ease: "power2.out" },
+          )
+            .to(
+              "#icono-direccion",
+              { scale: 1, duration: 1, ease: "back.out(1.5)" },
+              "<",
+            )
+            .to(
+              "#mariposa-dir-izq",
+              { x: 0, duration: 1, ease: "power2.out" },
+              "<",
+            )
+            .to(
+              "#mariposa-dir-der",
+              { x: 0, duration: 1, ease: "power2.out" },
+              "<",
+            )
+            .to(
+              "#titulo-direccion, #info-direccion, #boton-ubicacion",
+              { scale: 1, duration: 1, ease: "back.out(1.2)" },
+              "<",
+            );
+
+          gsap.to("#mariposa-dir-izq", {
+            y: -15,
+            x: 5,
+            rotation: 5,
+            duration: 3,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 0.5,
+          });
+          gsap.to("#mariposa-dir-der", {
+            y: -15,
+            x: -5,
+            rotation: -5,
+            duration: 3.2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 0.7,
+          });
+        },
+        onLeaveBack: () => {
+          const tl = gsap.timeline();
+          tl.to(
+            "#icono-direccion, #mariposa-dir-izq, #mariposa-dir-der, #titulo-direccion, #info-direccion, #boton-ubicacion",
+            { opacity: 0, duration: 0.5, ease: "power2.in" },
+          )
+            .to(
+              "#icono-direccion",
+              { scale: 0.8, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#mariposa-dir-izq",
+              { x: -30, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#mariposa-dir-der",
+              { x: 30, duration: 0.5, ease: "power2.in" },
+              "<",
+            )
+            .to(
+              "#titulo-direccion, #info-direccion, #boton-ubicacion",
+              { scale: 0.9, duration: 0.5, ease: "power2.in" },
+              "<",
+            );
+        },
+      });
+
+      // Pulso suave en el botón
+      gsap.to(".boton-ubicacion-custom", {
+        boxShadow: "0 0 28px rgba(0,232,255,0.7), 0 0 50px rgba(0,232,255,0.3)",
+        duration: 2,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        delay: 1.5,
+      });
+    });
+  }
+</script>
+
+<style>
+  /* ─── TÍTULO ─── */
+  .titulo-dir {
+    color: #ffffff;
+    text-shadow:
+      0 0 20px rgba(0, 232, 255, 0.9),
+      0 0 40px rgba(0, 232, 255, 0.5),
+      0 2px 4px rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── NOMBRE DEL LUGAR ─── */
+  .nombre-lugar {
+    color: #00e8ff;
+    text-shadow:
+      0 0 14px rgba(0, 232, 255, 0.8),
+      0 0 28px rgba(0, 232, 255, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ─── DIRECCIÓN ─── */
+  .texto-dir {
+    color: #ffffff;
+    text-shadow:
+      0 1px 6px rgba(0, 0, 0, 0.5),
+      0 0 12px rgba(0, 232, 255, 0.2);
+    font-weight: 600;
+  }
+
+  /* ─── HORA ─── */
+  .hora-dir {
+    color: #00e8ff;
+    text-shadow:
+      0 0 14px rgba(0, 232, 255, 0.8),
+      0 0 28px rgba(0, 232, 255, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ─── ICONO CYAN ─── */
+  .icono-cyan {
+    filter: brightness(0) saturate(100%) invert(85%) sepia(60%) saturate(400%)
+      hue-rotate(155deg) brightness(115%) contrast(100%);
+    transition:
+      filter 0.3s ease,
+      transform 0.3s ease;
+    drop-shadow: 0 0 12px rgba(0, 232, 255, 0.8);
+  }
+
+  .icono-cyan:hover {
+    filter: brightness(0) saturate(100%) invert(85%) sepia(60%) saturate(400%)
+      hue-rotate(155deg) brightness(130%) contrast(100%);
+    transform: scale(1.05);
+  }
+
+  /* ─── BOTÓN UBICACIÓN ─── */
+  .boton-ubicacion-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 232, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(0, 184, 204, 0.2) 100%
+    );
+    border: 1.5px solid rgba(0, 232, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      0 0 16px rgba(0, 232, 255, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .boton-ubicacion-custom:hover {
+    transform: scale(1.06) translateY(-2px);
+    border-color: rgba(0, 232, 255, 0.95);
+  }
+
+  .boton-icon {
+    width: 22px;
+    height: 22px;
+    color: #00e8ff;
+    filter: drop-shadow(0 0 6px rgba(0, 232, 255, 0.8));
+    flex-shrink: 0;
+  }
+
+  .boton-texto {
+    color: #ffffff;
+    text-shadow:
+      0 0 10px rgba(0, 232, 255, 0.7),
+      0 1px 3px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.05em;
+  }
+
+  /* Brillo al hacer hover */
+  .boton-brillo {
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+  }
+
+  .boton-ubicacion-custom:hover .boton-brillo {
+    left: 125%;
+  }
+
+  /* ─── MARIPOSAS ─── */
+  .mariposa-flotante {
+    will-change: transform;
+  }
+
+  .mariposa-flotante:hover {
+    transform: scale(1.1) !important;
+    filter: brightness(1.2);
+  }
+</style>
