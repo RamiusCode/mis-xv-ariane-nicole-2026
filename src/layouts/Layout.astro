@@ -16,6 +16,7 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/Coronadorada.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,11 +44,10 @@ const { title } = Astro.props;
         box-sizing: border-box;
       }
 
-      /* Forzar modo claro y evitar dark mode del navegador */
       html {
         width: 100%;
         height: 100%;
-        overflow-x: hidden; /* ← Elimina scroll horizontal */
+        overflow-x: hidden;
         color-scheme: light only;
       }
 
@@ -56,7 +56,7 @@ const { title } = Astro.props;
         padding: 0;
         width: 100%;
         min-height: 100vh;
-        overflow-x: hidden; /* ← Elimina scroll horizontal */
+        overflow-x: hidden;
         background-image: url("/imagenes/fondomarino.png");
         background-size: cover;
         background-position: center;
@@ -64,16 +64,231 @@ const { title } = Astro.props;
         background-attachment: fixed;
         color-scheme: light only;
         background-color: #ffffff;
+        position: relative;
+      }
+
+      /* ══════════════════════════════════════════
+         CANVAS DE PARTÍCULAS — fijo, detrás del contenido
+      ══════════════════════════════════════════ */
+      #particulas-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
       }
 
       main {
         background: transparent !important;
+        position: relative;
+        z-index: 1;
       }
     </style>
   </head>
   <body class="min-h-screen m-0 p-0">
+    <!-- CANVAS DE PARTÍCULAS -->
+    <canvas id="particulas-canvas"></canvas>
+
     <main class="m-0 p-0 overflow-x-hidden">
       <slot />
     </main>
   </body>
 </html>
+
+<script>
+  const canvas = document.getElementById(
+    "particulas-canvas",
+  ) as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d")!;
+
+  // ══════════════════════════════════════════
+  // CONFIGURACIÓN — ajusta a tu gusto
+  // ══════════════════════════════════════════
+  const CONFIG = {
+    cantidad: 120, // número de partículas
+    velocidadMin: 0.3, // velocidad mínima de vuelo
+    velocidadMax: 1.2, // velocidad máxima de vuelo
+    tamañoMin: 0.5, // radio mínimo en px
+    tamañoMax: 2.5, // radio máximo en px
+    brilloMin: 0.2, // opacidad mínima del pulso
+    brilloMax: 1.0, // opacidad máxima del pulso
+    velocidadPulso: 0.02, // qué tan rápido parpadean
+    estela: 6, // longitud de estela (px, 0 = sin estela)
+  };
+  // ══════════════════════════════════════════
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  // Tipos de partícula: estrella, círculo, cruz
+  type Tipo = "estrella" | "circulo" | "cruz";
+
+  interface Particula {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radio: number;
+    alpha: number;
+    alphaDir: number; // 1 = subiendo brillo, -1 = bajando
+    alphaPulso: number; // velocidad del pulso individual
+    tipo: Tipo;
+    rotacion: number;
+    velRotacion: number;
+    color: string;
+  }
+
+  const COLORES = [
+    "255,255,255", // blanco puro
+    "200,240,255", // blanco azulado
+    "255,255,220", // blanco dorado
+    "180,230,255", // cian muy suave
+  ];
+
+  function crearParticula(forzarPosicion = false): Particula {
+    const tipo: Tipo =
+      Math.random() < 0.5
+        ? "estrella"
+        : Math.random() < 0.6
+          ? "circulo"
+          : "cruz";
+
+    return {
+      x: forzarPosicion
+        ? Math.random() * canvas.width
+        : Math.random() * canvas.width,
+      y: forzarPosicion ? Math.random() * canvas.height : canvas.height + 10, // empieza desde abajo
+      vx: (Math.random() - 0.5) * CONFIG.velocidadMax,
+      vy: -(
+        CONFIG.velocidadMin +
+        Math.random() * (CONFIG.velocidadMax - CONFIG.velocidadMin)
+      ),
+      radio:
+        CONFIG.tamañoMin +
+        Math.random() * (CONFIG.tamañoMax - CONFIG.tamañoMin),
+      alpha: Math.random(),
+      alphaDir: Math.random() < 0.5 ? 1 : -1,
+      alphaPulso: CONFIG.velocidadPulso * (0.5 + Math.random()),
+      tipo,
+      rotacion: Math.random() * Math.PI * 2,
+      velRotacion: (Math.random() - 0.5) * 0.05,
+      color: COLORES[Math.floor(Math.random() * COLORES.length)],
+    };
+  }
+
+  // Inicializar partículas distribuidas por toda la pantalla
+  const particulas: Particula[] = Array.from({ length: CONFIG.cantidad }, () =>
+    crearParticula(true),
+  );
+
+  function dibujarEstrella(x: number, y: number, r: number, rot: number) {
+    const puntas = 4;
+    const interno = r * 0.4;
+    ctx.beginPath();
+    for (let i = 0; i < puntas * 2; i++) {
+      const angulo = (i * Math.PI) / puntas + rot;
+      const radio = i % 2 === 0 ? r : interno;
+      if (i === 0)
+        ctx.moveTo(x + Math.cos(angulo) * radio, y + Math.sin(angulo) * radio);
+      else
+        ctx.lineTo(x + Math.cos(angulo) * radio, y + Math.sin(angulo) * radio);
+    }
+    ctx.closePath();
+  }
+
+  function dibujarCruz(x: number, y: number, r: number, rot: number) {
+    const grosor = r * 0.35;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    ctx.rect(-r, -grosor, r * 2, grosor * 2); // horizontal
+    ctx.rect(-grosor, -r, grosor * 2, r * 2); // vertical
+    ctx.restore();
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particulas.forEach((p, i) => {
+      // Mover
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotacion += p.velRotacion;
+
+      // Pulso de brillo
+      p.alpha += p.alphaDir * p.alphaPulso;
+      if (p.alpha >= CONFIG.brilloMax) {
+        p.alpha = CONFIG.brilloMax;
+        p.alphaDir = -1;
+      }
+      if (p.alpha <= CONFIG.brilloMin) {
+        p.alpha = CONFIG.brilloMin;
+        p.alphaDir = 1;
+      }
+
+      // Reiniciar si sale de pantalla
+      if (p.y < -20 || p.x < -20 || p.x > canvas.width + 20) {
+        particulas[i] = crearParticula(false);
+        return;
+      }
+
+      // Estela suave detrás de cada partícula
+      if (CONFIG.estela > 0) {
+        const grad = ctx.createLinearGradient(
+          p.x,
+          p.y,
+          p.x - p.vx * CONFIG.estela,
+          p.y - p.vy * CONFIG.estela,
+        );
+        grad.addColorStop(0, `rgba(${p.color},${p.alpha * 0.6})`);
+        grad.addColorStop(1, `rgba(${p.color},0)`);
+        ctx.beginPath();
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = p.radio * 0.8;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - p.vx * CONFIG.estela, p.y - p.vy * CONFIG.estela);
+        ctx.stroke();
+      }
+
+      // Halo / destello exterior
+      const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radio * 3);
+      halo.addColorStop(0, `rgba(${p.color},${p.alpha * 0.5})`);
+      halo.addColorStop(0.5, `rgba(${p.color},${p.alpha * 0.15})`);
+      halo.addColorStop(1, `rgba(${p.color},0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radio * 3, 0, Math.PI * 2);
+      ctx.fillStyle = halo;
+      ctx.fill();
+
+      // Núcleo brillante
+      ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+      ctx.shadowBlur = p.radio * 4;
+      ctx.shadowColor = `rgba(${p.color},0.9)`;
+
+      if (p.tipo === "estrella") {
+        dibujarEstrella(p.x, p.y, p.radio * 1.4, p.rotacion);
+        ctx.fill();
+      } else if (p.tipo === "cruz") {
+        dibujarCruz(p.x, p.y, p.radio * 1.2, p.rotacion);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radio, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  tick();
+</script>

@@ -8,24 +8,6 @@
     >
     </div>
 
-    <!-- ── GLOBO IZQUIERDO ── -->
-    <div class="globo-wrapper globo-wrapper-izq" id="globo-izq">
-        <img
-            src="/imagenes/globo.png"
-            alt="Globo izquierdo"
-            class="globo-img"
-        />
-    </div>
-
-    <!-- ── GLOBO DERECHO (espejo en el wrapper) ── -->
-    <div class="globo-wrapper globo-wrapper-der" id="globo-der">
-        <img
-            src="/imagenes/globo.png"
-            alt="Globo derecho"
-            class="globo-img globo-img-flip"
-        />
-    </div>
-
     <div
         class="relative w-full overflow-hidden"
         id="flores-arriba"
@@ -37,6 +19,7 @@
             class="w-full h-auto object-cover object-center block"
             style="opacity: 1 !important;"
         />
+
         <div
             class="absolute left-1/2 transform -translate-x-1/2 top-[100px] sm:top-16 md:top-12 lg:top-8 xl:top-4 z-50"
             id="corona"
@@ -55,12 +38,18 @@
     <div class="relative w-full sm:pt-40 md:pt-48 overflow-hidden px-4 z-10">
         <div class="flex justify-center w-full">
             <div class="text-center max-w-4xl w-full">
+                <!-- Eyebrow + Título SIN ningún efecto, blanco puro -->
                 <div
                     class="relative text-center z-30 mb-6 w-full"
                     id="titulo-container"
                 >
+                    <!-- <p class="disco-eyebrow" id="eyebrow-line">
+                        ✦ &nbsp; celebrando &nbsp; ✦
+                    </p> -->
                     <h1 class="titulo-disco" id="titulo">MIS XV AÑOS</h1>
                 </div>
+
+                <!-- Nombre: neón cian igual a la corona -->
                 <div class="nombre-disco-wrap mb-10" id="nombre-container">
                     <h2
                         class="font-great-vibes nombre-disco"
@@ -68,6 +57,7 @@
                     >
                     </h2>
                 </div>
+
                 <div
                     class="relative w-full overflow-visible"
                     id="foto-container"
@@ -155,6 +145,7 @@
             }
         })();
 
+        /* GSAP */
         gsap.set("#flores-arriba", { clearProps: "all" });
 
         gsap.fromTo(
@@ -168,6 +159,11 @@
                 ease: "back.out(1.4)",
                 delay: 0.2,
             },
+        );
+        gsap.fromTo(
+            "#eyebrow-line",
+            { opacity: 0 },
+            { opacity: 1, duration: 1, ease: "power2.out", delay: 0.6 },
         );
         gsap.fromTo(
             "#titulo",
@@ -187,49 +183,43 @@
             },
         );
 
-        /* ── Globos: GSAP solo en el wrapper (el flip está en la img interna) ── */
-        gsap.fromTo(
-            "#globo-izq",
-            { opacity: 0, x: -50 },
-            { opacity: 1, x: 0, duration: 1.2, ease: "power2.out", delay: 0.7 },
-        );
-        gsap.fromTo(
-            "#globo-der",
-            { opacity: 0, x: 50 },
-            { opacity: 1, x: 0, duration: 1.2, ease: "power2.out", delay: 0.7 },
-        );
-
-        /* Flotación desfasada */
-        gsap.to("#globo-izq", {
-            y: -16,
-            duration: 2.8,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-        });
-        gsap.to("#globo-der", {
-            y: -16,
-            duration: 3.3,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 0.6,
-        });
-
-        /* Nombre */
+        /* Nombre - se construye con spans y se aplica la clase DESPUÉS de insertarlos */
         function animarNombre() {
             const texto = "Ariane Nicole";
             const contenedor = document.getElementById("nombre-typewriter");
             if (!contenedor) return;
+
+            // Construimos el HTML primero
             let html = "";
             texto.split("").forEach((letra, i) => {
                 if (letra === " ") {
                     html += `<span style="display:inline-block;width:0.3em;"></span>`;
                 } else {
-                    html += `<span class="letra-neon" style="--i:${i};display:inline-block;opacity:0;color:#00f0ff;text-shadow:0 0 7px #00f5ff,0 0 15px #00f5ff,0 0 30px #00d0e8,0 0 60px #0090b0,0 0 90px #006080;transform:translateY(40px) scale(0.6);filter:blur(8px);animation:neonNombreKF 2.6s ease-in-out infinite;animation-delay:calc(${i} * 0.07s);">${letra}</span>`;
+                    // Inline style con todo el neón directamente aquí,
+                    // así no depende de que la clase CSS cargue correctamente
+                    html += `<span
+                        class="letra-neon"
+                        style="
+                            --i:${i};
+                            display:inline-block;
+                            opacity:0;
+                            color:#00f0ff;
+                            text-shadow:
+                                0 0 7px #00f5ff,
+                                0 0 15px #00f5ff,
+                                0 0 30px #00d0e8,
+                                0 0 60px #0090b0,
+                                0 0 90px #006080;
+                            transform:translateY(40px) scale(0.6);
+                            filter:blur(8px);
+                            animation: neonNombreKF 2.6s ease-in-out infinite;
+                            animation-delay: calc(${i} * 0.07s);
+                        "
+                    >${letra}</span>`;
                 }
             });
             contenedor.innerHTML = html;
+
             gsap.to(".letra-neon", {
                 opacity: 1,
                 y: 0,
@@ -241,7 +231,10 @@
                 delay: 1.0,
             });
         }
+
         animarNombre();
+
+        // Sin float — el nombre queda quieto
     });
 </script>
 
@@ -253,42 +246,6 @@
     #flores-arriba,
     #flores-arriba img {
         opacity: 1 !important;
-    }
-
-    /* ══════════════════════════════════════
-       GLOBOS
-       wrapper = posición + GSAP translate
-       img     = tamaño + flip (sin conflicto)
-    ══════════════════════════════════════ */
-    .globo-wrapper {
-        position: absolute;
-        bottom: 0;
-        z-index: 20;
-        pointer-events: none;
-        /* ancho responsivo: más pequeño que antes */
-        width: clamp(70px, 16vw, 150px);
-    }
-
-    .globo-wrapper-izq {
-        left: 0;
-        transform-origin: bottom left;
-    }
-
-    .globo-wrapper-der {
-        right: 0;
-        transform-origin: bottom right;
-    }
-
-    .globo-img {
-        width: 100%;
-        height: auto;
-        display: block;
-        object-fit: contain;
-    }
-
-    /* El flip SOLO en la imagen, no toca el wrapper que maneja GSAP */
-    .globo-img-flip {
-        transform: scaleX(-1);
     }
 
     /* ── Corona neón ── */
@@ -347,6 +304,7 @@
         }
     }
 
+    /* ── Eyebrow: cian simple ── */
     .disco-eyebrow {
         font-family: "Crimson Text", serif;
         font-size: clamp(1.2rem, 3vw, 1.5rem);
@@ -355,6 +313,7 @@
         margin-bottom: 6px;
     }
 
+    /* ── Título: BLANCO PURO, sin sombra, sin efecto ── */
     .titulo-disco {
         font-family: "Crimson Text", serif;
         font-weight: 500;
@@ -365,6 +324,7 @@
         animation: none;
     }
 
+    /* ── Nombre ── */
     .nombre-disco-wrap {
         position: relative;
         display: inline-block;
@@ -377,6 +337,7 @@
         letter-spacing: 0.03em;
     }
 
+    /* Keyframe para el pulso del neón en el nombre */
     @keyframes neonNombreKF {
         0%,
         100% {
@@ -398,6 +359,7 @@
         }
     }
 
+    /* Clase letra-neon como respaldo (el inline style tiene prioridad) */
     .letra-neon {
         color: #00f0ff;
         will-change: transform, opacity;
@@ -409,6 +371,7 @@
         animation: neonNombreKF 2.6s ease-in-out infinite;
     }
 
+    /* ── Destellos ── */
     .sparkle-star {
         position: absolute;
         background: #fff;

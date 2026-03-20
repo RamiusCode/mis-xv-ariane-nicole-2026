@@ -23,9 +23,9 @@
 
   <div class="max-w-3xl mx-auto relative">
     <div class="max-w-xl mx-auto px-4 relative">
-      <!-- CARD GLASSMORPHISM — z-index manejado por CSS -->
+      <!-- CARD GLASSMORPHISM -->
       <div
-        class="cal-card rounded-3xl p-4 md:p-8 relative"
+        class="cal-card rounded-3xl p-4 md:p-8 relative z-10"
         id="calendario-card"
       >
         <!-- Destellos decorativos internos -->
@@ -154,6 +154,8 @@
       gsap.set("#mariposa-cal-der", { opacity: 0, x: 20 });
       gsap.set("#titulo-mes-container h3", { opacity: 0, y: -10 });
       gsap.set(".dia-calendario", { opacity: 0, scale: 0.8 });
+
+      // Globos: estado inicial fuera de pantalla
       gsap.set("#globo-cal-izq", { opacity: 0, x: -50 });
       gsap.set("#globo-cal-der", { opacity: 0, x: 50 });
 
@@ -205,6 +207,7 @@
             },
             "-=0.2",
           )
+          // Globos entran junto con los días
           .to(
             "#globo-cal-izq, #globo-cal-der",
             {
@@ -304,19 +307,21 @@
 </script>
 
 <style>
+  /* ── Sección: contexto de posicionamiento para los globos ── */
   .calendario-section {
     position: relative;
     overflow: hidden;
   }
 
   /* ══════════════════════════════════════
-     GLOBOS — COMPLETAMENTE DETRÁS del card
+     GLOBOS — pegados a los bordes del section
+     mismo patrón que el Hero
   ══════════════════════════════════════ */
   .globo-cal-wrapper {
     position: absolute;
-    bottom: 0;
-    width: clamp(70px, 16vw, 150px);
-    z-index: 5; /* detrás del card que tiene z-index: 10 */
+    bottom: 0; /* alineados al fondo del section */
+    width: clamp(70px, 16vw, 150px); /* responsivo, mismo tamaño que hero */
+    z-index: 20;
     pointer-events: none;
   }
 
@@ -337,12 +342,13 @@
     object-fit: contain;
   }
 
+  /* Flip solo en la imagen, sin tocar el wrapper que maneja GSAP */
   .globo-cal-flip {
     transform: scaleX(-1);
   }
 
   /* ═══════════════════════════════════════
-     PALETA
+     PALETA: #00e8ff + #ffffff
   ═══════════════════════════════════════ */
   :root {
     --cyan: #00e8ff;
@@ -357,7 +363,6 @@
     --cyan-soft: rgba(0, 232, 255, 0.15);
   }
 
-  /* ─── CARD — z-index: 10 para tapar los globos ─── */
   .cal-card {
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(20px);
@@ -369,7 +374,6 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.4);
     overflow: hidden;
     position: relative;
-    z-index: 10;
   }
 
   .cal-card::before {
